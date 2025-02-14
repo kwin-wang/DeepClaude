@@ -4,8 +4,8 @@ import sys
 import os
 from dotenv import load_dotenv
 
-# 确保环境变量被加载
-load_dotenv()
+# 确保环境变量被正确加载
+load_dotenv(override=True)
 
 def get_log_level() -> int:
     """从环境变量获取日志级别
@@ -50,7 +50,7 @@ def setup_logger(name: str = "DeepClaude") -> logging.Logger:
     
     # 设置彩色日志格式
     formatter = colorlog.ColoredFormatter(
-        "%(log_color)s%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+        "%(log_color)s%(asctime)s - %(name)s - %(levelname)s - [%(filename)s:%(lineno)d:%(funcName)s] - %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S",
         log_colors={
             'DEBUG':    'cyan',

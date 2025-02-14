@@ -77,6 +77,8 @@ class DeepSeekClient(BaseClient):
                         json_str = line[len("data: "):]
                         if json_str == "[DONE]":
                             return
+                        if json_str == "":
+                            continue
                         
                         data = json.loads(json_str)
                         if data and data.get("choices") and data["choices"][0].get("delta"):
@@ -126,6 +128,7 @@ class DeepSeekClient(BaseClient):
                                     else:
                                         # 普通内容
                                         yield "content", content
+
                                         
             except json.JSONDecodeError as e:
                 logger.error(f"JSON 解析错误: {e}")
