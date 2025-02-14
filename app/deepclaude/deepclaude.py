@@ -15,15 +15,17 @@ class DeepClaude:
                  deepseek_api_url: str = "https://api.deepseek.com/v1/chat/completions", 
                  claude_api_url: str = "https://api.anthropic.com/v1/messages",
                  claude_provider: str = "anthropic",
-                 is_origin_reasoning: bool = True):
+                 is_origin_reasoning: bool = True,
+                 is_openai_compatible: bool = False):
         """初始化 API 客户端
         
         Args:
             deepseek_api_key: DeepSeek API密钥
             claude_api_key: Claude API密钥
+            is_openai_compatible: 是否使用 OpenAI 兼容的 API
         """
         self.deepseek_client = DeepSeekClient(deepseek_api_key, deepseek_api_url)
-        self.claude_client = ClaudeClient(claude_api_key, claude_api_url, claude_provider)
+        self.claude_client = ClaudeClient(claude_api_key, claude_api_url, claude_provider, is_openai_compatible)
         self.is_origin_reasoning = is_origin_reasoning
 
     async def chat_completions_with_stream(

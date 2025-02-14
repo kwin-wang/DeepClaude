@@ -9,7 +9,7 @@ class ClaudeClient(BaseClient):
     # 定义 OpenAI API 兼容的 provider 列表
     OPENAI_COMPATIBLE_PROVIDERS = ["openrouter", "oneapi"]
     
-    def __init__(self, api_key: str, api_url: str = "https://api.anthropic.com/v1/messages", provider: str = "anthropic"):
+    def __init__(self, api_key: str, api_url: str = "https://api.anthropic.com/v1/messages", provider: str = "anthropic", is_openai_compatible: bool = False):
         """初始化 Claude 客户端
         
         Args:
@@ -19,6 +19,7 @@ class ClaudeClient(BaseClient):
         """
         super().__init__(api_key, api_url)
         self.provider = provider
+        self.is_openai_compatible = is_openai_compatible or provider in self.OPENAI_COMPATIBLE_PROVIDERS
 
     async def stream_chat(
         self,
@@ -61,7 +62,7 @@ class ClaudeClient(BaseClient):
                 "temperature": 1 if model_arg[0] < 0 or model_arg[0] > 1 else model_arg[0],
                 "top_p": model_arg[1]
             }
-        elif self.provider in self.OPENAI_COMPATIBLE_PROVIDERS:
+        elif self.is_openai_compatible:
             headers = {
                 "Authorization": f"Bearer {self.api_key}",
                 "Content-Type": "application/json"
@@ -103,7 +104,7 @@ class ClaudeClient(BaseClient):
                             data = json.loads(json_str)
                             logger.debug(f"收到的数据: {data}")
                             
-                            if self.provider in self.OPENAI_COMPATIBLE_PROVIDERS:
+                            if self.is_openai_compatible:
                                 choices = data.get('choices', [])
                                 if choices:
                                     delta = choices[0].get('delta', {})
